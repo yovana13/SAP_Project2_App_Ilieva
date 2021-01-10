@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1435.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loginapp.admin">
+    <children>
+        <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="160.0" text="Administrator Dashboard" />
+        <Button fx:id="addproduct" layoutX="132.0" layoutY="299.0" mnemonicParsing="false" onAction="#addProduct" prefHeight="26.0" prefWidth="149.0" text="Add Product" />
+      <TextField fx:id="idproduct" layoutX="134.0" layoutY="121.0" />
+      <TextField fx:id="productname" layoutX="134.0" layoutY="145.0" />
+      <TextField fx:id="quantity" layoutX="134.0" layoutY="171.0" />
+      <TextField fx:id="priceperitem" layoutX="133.0" layoutY="196.0" />
+      <Label layoutX="13.0" layoutY="125.0" prefHeight="18.0" prefWidth="114.0" text="Old/New Id Product" />
+      <Label layoutX="13.0" layoutY="149.0" prefHeight="18.0" prefWidth="95.0" text="Product Name" />
+      <Label layoutX="14.0" layoutY="175.0" prefHeight="18.0" prefWidth="95.0" text="Quantity" />
+      <Label layoutX="14.0" layoutY="199.0" prefHeight="18.0" prefWidth="95.0" text="Price Per Item" />
+      <Button layoutX="132.0" layoutY="327.0" mnemonicParsing="false" onAction="#editProduct" prefHeight="26.0" prefWidth="149.0" text="Edit Product" />
+      <Label layoutX="351.0" layoutY="124.0" prefHeight="18.0" prefWidth="126.0" text="Old/NewId of the User" />
+      <Label layoutX="353.0" layoutY="149.0" prefHeight="18.0" prefWidth="74.0" text="Usrname" />
+      <Label layoutX="351.0" layoutY="175.0" prefHeight="18.0" prefWidth="77.0" text="Password" />
+      <TextField fx:id="iduser" layoutX="481.0" layoutY="121.0" />
+      <TextField fx:id="username" layoutX="481.0" layoutY="146.0" />
+      <PasswordField fx:id="password" layoutX="481.0" layoutY="171.0" />
+      <Button layoutX="484.0" layoutY="299.0" mnemonicParsing="false" onAction="#addUser" prefHeight="26.0" prefWidth="142.0" text="Add User" />
+      <Label layoutX="12.0" layoutY="422.0" prefHeight="18.0" prefWidth="149.0" text="Id Product" />
+      <Label layoutX="353.0" layoutY="422.0" prefHeight="18.0" prefWidth="52.0" text="Id User" />
+      <TextField fx:id="deleteproductid" layoutX="132.0" layoutY="418.0" />
+      <TextField fx:id="deleteuserid" layoutX="481.0" layoutY="418.0" />
+      <Button layoutX="132.0" layoutY="444.0" mnemonicParsing="false" onAction="#deleteProduct" prefHeight="26.0" prefWidth="149.0" text="Delete Product" />
+      <Button layoutX="480.0" layoutY="444.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="26.0" prefWidth="149.0" text="Delete User" />
+      <Button layoutX="414.0" layoutY="567.0" mnemonicParsing="false" onAction="#periodReview" text="Review and analysis of sales for a selected period of time" />
+      <Button layoutX="14.0" layoutY="567.0" mnemonicParsing="false" onAction="#saleOfRepresentative" text=" Review and analysis of sales for a selected sales representative" />
+      <Label fx:id="saletable" layoutX="658.0" layoutY="61.0" prefHeight="238.0" prefWidth="768.0" />
+      <TextField fx:id="fullname" layoutX="481.0" layoutY="222.0" />
+      <TextField fx:id="email" layoutX="481.0" layoutY="248.0" />
+      <Label layoutX="352.0" layoutY="226.0" text="Full Name" />
+      <Label layoutX="353.0" layoutY="252.0" text="Email" />
+      <Button layoutX="484.0" layoutY="327.0" mnemonicParsing="false" onAction="#editUser" prefHeight="26.0" prefWidth="142.0" text="Edit User" />
+      <TextField fx:id="role" layoutX="481.0" layoutY="196.0" />
+      <Label layoutX="350.0" layoutY="200.0" text="Role" />
+      <Label layoutX="12.0" layoutY="61.0" prefHeight="51.0" prefWidth="617.0" text="Insert new id for the product/user if you want to add or insert old  id for the product/user if you want to edit it" />
+      <Label layoutX="18.0" layoutY="534.0" text="Id of representative" />
+      <TextField fx:id="idrepresentative" layoutX="134.0" layoutY="530.0" />
+      <TextField fx:id="startdate" layoutX="477.0" layoutY="530.0" prefHeight="26.0" prefWidth="114.0" />
+      <TextField fx:id="enddate" layoutX="615.0" layoutY="530.0" prefHeight="26.0" prefWidth="114.0" />
+      <Label layoutX="415.0" layoutY="534.0" text="From date" />
+      <Label layoutX="599.0" layoutY="534.0" text="to" />
+      <Label fx:id="infolabel" layoutX="33.0" layoutY="648.0" prefHeight="18.0" prefWidth="662.0" />
+      <Label fx:id="producttable" layoutX="660.0" layoutY="299.0" prefHeight="216.0" prefWidth="749.0" />
+      <Button layoutX="136.0" layoutY="604.0" mnemonicParsing="false" onAction="#printProductTable" prefHeight="26.0" prefWidth="150.0" text="Print Product Table" />
+    </children>
+</AnchorPane>
