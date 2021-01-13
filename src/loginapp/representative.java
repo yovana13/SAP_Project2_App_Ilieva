@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
@@ -57,28 +58,51 @@ public class representative implements Initializable {
 
     @FXML
     public void addClient() throws Exception{
-
+        try{
+        if(checkClient(Integer.parseInt(this.idclient.getText()),Integer.parseInt(this.userID.getText()))!=true) {
         String sqlText = String.format("INSERT INTO clients values(%d,'%s',%d,'%s')", Integer.parseInt(this.idclient.getText()), this.clientname.getText(),Integer.parseInt(this.userID.getText()),this.email.getText());
         addUpdateDeleteElement(sqlText);
         this.infolabel.setText("Client Successfully Added");
+        } else {
+            this.infolabel.setText("Duplicate entry for id, id already exists in your client list");
+        }
+    } catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input or you did not entered your id on the top of the page");
+    }
     }
 
     @FXML
     public void editClient() throws Exception{
+        try{
+        if(checkClient(Integer.parseInt(this.idclient.getText()),Integer.parseInt(this.userID.getText()))) {
         String sqlText = String.format("UPDATE clients SET name='%s', addedByUsersId=%d, email='%s' WHERE id=%d", this.clientname.getText(), Integer.parseInt(this.userID.getText()), this.email.getText(),Integer.parseInt(this.idclient.getText()));
         addUpdateDeleteElement(sqlText);
         this.infolabel.setText("Client Successfully Edited");
+        } else {
+            this.infolabel.setText("This client is not added in your list");
+        }
+    } catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input or you did not entered your id on the top of the page");
+    }
     }
 
     @FXML
     public void deleteClient() throws Exception{
+        try{
+        if(checkClient(Integer.parseInt(this.idclientdelete.getText()),Integer.parseInt(this.userID.getText()))){
         String sqlText = String.format("DELETE FROM clients WHERE id=%d", Integer.parseInt(this.idclientdelete.getText()));
         addUpdateDeleteElement(sqlText);
         this.infolabel.setText("Client Successfully Deleted");
+    } else {
+        this.infolabel.setText("This client is not added in your list");
+    }
+    } catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input, you need to input number or you did not entered your id on the top of the page");
+    }
     }
 
     @FXML
-    public void printSaleTable(ActionEvent event1)throws  Exception{
+    public void printSaleTable(ActionEvent event1)throws  SQLException{
 
         try {
             String result="";
@@ -94,8 +118,8 @@ public class representative implements Initializable {
             }
             this.saletable1.setText(result);
             //System.out.println("Data printed");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
         }
     }
 
@@ -115,30 +139,12 @@ public class representative implements Initializable {
                 result=result+"\n";
             }
             this.clienttable1.setText(result);
-            //System.out.println("Data printed");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-//    public static int getID(String table, int username) throws Exception{
-//        int result=0;
-//        try {
-//
-//            Connection myConn = getConnection();
-//            Statement myStmt = myConn.createStatement();
-//            String sql = String.format("SELECT * FROM %s WHERE username='%s'",table,username);
-//
-//            ResultSet rs = myStmt.executeQuery(sql);
-//            while (rs.next()) {
-//                result = rs.getInt("id");
-//            }
-//            return result;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
 
     public static void addUpdateDeleteElement(String sqlText) throws Exception{
         try {
@@ -146,7 +152,6 @@ public class representative implements Initializable {
             Statement myStmt = myConn.createStatement();
             myStmt.executeUpdate(sqlText);
 
-            System.out.println("Action done.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,11 +159,12 @@ public class representative implements Initializable {
 
     @FXML
     public void makeSale(ActionEvent event) throws Exception{
+        try{
         int counter = 0;
-        if(checkClient(Integer.parseInt(this.idclientsale.getText()),4))
+        if(checkClient(Integer.parseInt(this.idclientsale.getText()),Integer.parseInt(this.userID.getText())))
             counter+=1;
         else
-            this.infolabel.setText("This client is not in your list. You need to add it first.");
+            this.infolabel.setText("This client is not in your list. You need to add it first.(Check if you first entered your id)");
         if(checkProductAndAvailableQuantity(Integer.parseInt(this.idproduct.getText()),Integer.parseInt(this.quantitysold.getText())))
             counter+=1;
         else
@@ -170,9 +176,12 @@ public class representative implements Initializable {
             addUpdateDeleteElement(sqlText);
             this.infolabel.setText("Sale made successfully");
         }
+    } catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input or you did not entered your id on the top of the page");
+    }
     }
 
-    public static boolean checkClient(int idClient, int usersId) throws Exception{
+    public  boolean checkClient(int idClient, int usersId) throws SQLException {
         String result="";
         try {
             int counter = 0;
@@ -190,13 +199,13 @@ public class representative implements Initializable {
                 return true;
             else
                 return false;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
         }
         return false;
     }
 
-    public static boolean checkProductAndAvailableQuantity(int idProduct, int neededQuantity) throws Exception{
+    public  boolean checkProductAndAvailableQuantity(int idProduct, int neededQuantity) throws SQLException{
         String result="";
         try {
 
@@ -211,13 +220,13 @@ public class representative implements Initializable {
                     return true;
             }
             return false;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
         }
         return false;
     }
 
-        public static float getPrice(String table, int id) throws Exception{
+        public float getPrice(String table, int id) throws SQLException{
         float result=0;
         try {
 
@@ -230,8 +239,8 @@ public class representative implements Initializable {
                 result = rs.getFloat("pricePerItem");
             }
             return result;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
         }
         return result;
     }
