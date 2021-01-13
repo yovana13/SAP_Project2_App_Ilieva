@@ -10,11 +10,11 @@ import static dbUtil.dbConnection.getConnection;
 public class LoginModel {
     Connection connection;
 
-    public LoginModel() throws Exception {
+    public LoginModel() throws SQLException {
         try {
             this.connection = getConnection();
         }catch (SQLException e){
-            System.out.println(e);
+            System.out.println("SQL Exception found in the code");
         }
         if(this.connection==null){
             System.exit(1);
@@ -25,7 +25,7 @@ public class LoginModel {
         return this.connection != null;
     }
 
-    public boolean isLogin(String user, String password) throws Exception{
+    public boolean isLogin(String user, String password) throws SQLException{
         String result="";
         try {
             Connection myConn = getConnection();
@@ -39,12 +39,12 @@ public class LoginModel {
                     return true;
             }
                 return false;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             return false;
         }
     }
 
-    public String getRole(String username) throws Exception{
+    public String getRole(String username) throws SQLException{
         String result="";
         try {
             Connection myConn = getConnection();
@@ -56,8 +56,8 @@ public class LoginModel {
                 result = rs.getString("role");
             }
             return result;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("SQL Exception found in the code, we did not got role");
         }
         return result;
     }
