@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
@@ -56,73 +57,97 @@ public class admin implements Initializable {
     private Label producttable;
 
     private dbConnection dconn;
-    public void initialize(URL url, ResourceBundle rs){this.dconn = new dbConnection();}
+    public void initialize(URL url, ResourceBundle rs){}
 
-
-
-    @FXML
-    public void printSaleTable(ActionEvent event1)throws  Exception{
-
-        try {
-            String result="";
-            Connection myConn = getConnection();
-            Statement myStmt = myConn.createStatement();
-            String sql = "SELECT * FROM sales";
-            ResultSet rs = myStmt.executeQuery(sql);
-
-            while (rs.next()) {
-              //  result=result+String.format("Sale id: "+rs.getString("saleId") + " Id of the sold product: " + rs.getString("idProduct") + "Sold by:"+rs.getString("soldBy")+ "Quantity sold: "+rs.getString("quantitySold")+" Date sold: "+rs.getString("dateSold")+" Total price from the sale: "+rs.getString("totalPrice"));
-                result=result+String.format("Sale id: "+rs.getString("saleId") + " Id of the sold product: " + rs.getString("idProduct"));
-            result=result+"\n";
-            }
-            this.saletable.setText(result);
-            //System.out.println("Data printed");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 @FXML
 public void deleteProduct() throws Exception{
+    try {
+    if(checkId("products",Integer.parseInt(this.deleteproductid.getText()))) {
     String sqlText = String.format("DELETE FROM products WHERE id=%d", Integer.parseInt(this.deleteproductid.getText()));
     addUpdateDeleteElement(sqlText);
-    //this.infolabel.setText("Product Successfully Deleted");
+    this.infolabel.setText("Product Successfully Deleted");
+    } else {
+        this.infolabel.setText("This id does not exists");
+    }
+    } catch (NumberFormatException e){
+        this.infolabel.setText("Input number(integer)");
+    }
 }
 
 @FXML
 public void deleteUser() throws Exception{
+        try{
+    if(checkId("users",Integer.parseInt(this.deleteuserid.getText()))) {
         String sqlText = String.format("DELETE FROM users WHERE id=%d", Integer.parseInt(this.deleteuserid.getText()));
         addUpdateDeleteElement(sqlText);
     this.infolabel.setText("User Successfully Deleted");
-
+    } else {
+        this.infolabel.setText("This id does not exists");
+    }
+        } catch (NumberFormatException e){
+            this.infolabel.setText("Input number(integer)");
+        }
 }
 
 @FXML
 public void addProduct() throws Exception {
-    String sqlText = String.format("INSERT INTO products values(%d,'%s',%d,%s)", Integer.parseInt(this.idproduct.getText()), this.productname.getText(), Integer.parseInt(this.quantity.getText()), this.priceperitem.getText());
-    addUpdateDeleteElement(sqlText);
-    this.infolabel.setText("Product Successfully Added");
+        try {
+    if(checkId("products",Integer.parseInt(this.idproduct.getText()))!=true) {
+        String sqlText = String.format("INSERT INTO products values(%d,'%s',%d,%s)", Integer.parseInt(this.idproduct.getText()), this.productname.getText(), Integer.parseInt(this.quantity.getText()), this.priceperitem.getText());
+        addUpdateDeleteElement(sqlText);
+        this.infolabel.setText("Product Successfully Added");
+    } else {
+        this.infolabel.setText("Duplicate entry for id, id already exists");
+        }
+} catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input");
+    }
 }
 
 @FXML
 public void editProduct() throws Exception{
+        try {
+    if(checkId("products",Integer.parseInt(this.idproduct.getText()))) {
     String sqlText = String.format("UPDATE products SET name='%s', quantity=%d, pricePerItem=%s WHERE id=%s", this.productname.getText(), Integer.parseInt(this.quantity.getText()),this.priceperitem.getText() , Integer.parseInt(this.idproduct.getText()));
     addUpdateDeleteElement(sqlText);
     this.infolabel.setText("Product Successfully Edited");
+    } else {
+        this.infolabel.setText("This id does not exists");
+    }
+        } catch (NumberFormatException e){
+            this.infolabel.setText("Invalid input");
+        }
 }
 
 @FXML
 public void addUser() throws Exception{
+        try{
+    if(checkId("users",Integer.parseInt(this.iduser.getText()))!=true) {
     String sqlText = String.format("INSERT INTO users values(%d,'%s','%s','%s','%s','%s')", Integer.parseInt(this.iduser.getText()), this.username.getText(), this.password.getText(),this.role.getText(),this.fullname.getText(),this.email.getText());
     addUpdateDeleteElement(sqlText);
     this.infolabel.setText("User Successfully Added");
+    } else {
+        this.infolabel.setText("Duplicate entry for id, id already exists");
+    }
+} catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input");
+    }
 }
 
 @FXML
 public void editUser() throws Exception{
+        try{
+    if(checkId("users",Integer.parseInt(this.iduser.getText()))) {
     String sqlText = String.format("UPDATE users SET username='%s', password='%s',role='%s',fullname='%s',email='%s' WHERE id=%d", this.username.getText(),this.password.getText(),this.role.getText(),this.fullname.getText(),this.email.getText(),Integer.parseInt(this.iduser.getText()) );
     addUpdateDeleteElement(sqlText);
     this.infolabel.setText("User Successfully Edited");
+    } else {
+        this.infolabel.setText("This id does not exists");
+    }
+} catch (NumberFormatException e){
+        this.infolabel.setText("Invalid input");
+    }
 }
 
 @FXML
@@ -139,15 +164,15 @@ public void saleOfRepresentative() throws Exception {
             result=result+"\n";
         }
         this.saletable.setText(result);
-        //System.out.println("Data printed");
-    } catch (Exception e) {
-        e.printStackTrace();
+        this.infolabel.setText("Table Successfully Printed");
+} catch (NumberFormatException e){
+        this.infolabel.setText("Input number(integer)");
     }
-    this.infolabel.setText("Table Successfully Printed");
+
 }
 
 @FXML
-public void periodReview() throws Exception {
+public void periodReview() throws SQLException {
     try {
         String result="";
         Connection myConn = getConnection();
@@ -174,7 +199,7 @@ public void periodReview() throws Exception {
                 if(Integer.parseInt(dateArray[1])<9)
                     dateArray[1] = "0"+String.valueOf(Integer.parseInt(dateArray[1])+1);
                 else
-                    dateArray[1] = "0"+String.valueOf(Integer.parseInt(dateArray[1])+1);
+                    dateArray[1] = String.valueOf(Integer.parseInt(dateArray[1])+1);
             }
             else {
                 dateArray[0]= "01";
@@ -184,15 +209,16 @@ public void periodReview() throws Exception {
             date = String.join(".",dateArray);
         }
         this.saletable.setText(result);
-        System.out.println("Data printed");
-    } catch (Exception e) {
-        e.printStackTrace();
+
+        this.infolabel.setText("Table Successfully Printed");
+    } catch (SQLException e) {
+        this.infolabel.setText("SQLException found in the code");
     }
-    this.infolabel.setText("Table Successfully Printed");
+
 }
 
     @FXML
-    public void printProductTable(ActionEvent event1)throws  Exception{
+    public void printProductTable(ActionEvent event1)throws  SQLException{
 
         try {
             String result="";
@@ -202,27 +228,46 @@ public void periodReview() throws Exception {
             ResultSet rs = myStmt.executeQuery(sql);
 
             while (rs.next()) {
-                //  result=result+String.format("Sale id: "+rs.getString("saleId") + " Id of the sold product: " + rs.getString("idProduct") + "Sold by:"+rs.getString("soldBy")+ "Quantity sold: "+rs.getString("quantitySold")+" Date sold: "+rs.getString("dateSold")+" Total price from the sale: "+rs.getString("totalPrice"));
                 result=result+String.format("Product id: "+rs.getInt("id") + " Name of product: " + rs.getString("name")+" Quantity: "+rs.getInt("quantity")+ " Price per item: "+rs.getFloat("pricePerItem"));
                 result=result+"\n";
             }
             this.producttable.setText(result);
-            //System.out.println("Data printed");
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
         }
     }
 
-public static void addUpdateDeleteElement(String sqlText) throws Exception{
+public  void addUpdateDeleteElement(String sqlText) throws SQLException{
         try {
             Connection myConn = getConnection();
             Statement myStmt = myConn.createStatement();
             myStmt.executeUpdate(sqlText);
 
-            System.out.println("Action done.");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
         }
+    }
+
+    public  boolean checkId(String table, int id){
+        int result=0;
+        try {
+
+            Connection myConn = getConnection();
+            Statement myStmt = myConn.createStatement();
+            String sql = String.format("SELECT * FROM %s WHERE id=%d",table,id);
+
+            ResultSet rs = myStmt.executeQuery(sql);
+            while (rs.next()) {
+                result = rs.getInt("id");
+                if(result==id)
+                    return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            this.infolabel.setText("SQLException found in the code");
+        }
+        return false;
     }
 
 }
