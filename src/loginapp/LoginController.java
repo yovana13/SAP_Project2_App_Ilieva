@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -54,12 +55,11 @@ public class LoginController implements Initializable {
                 }else if(loginModel.getRole(this.username.getText()).equals("representative")){
                     representativeLogin();
                 }
-               // this.loginStatus.setText("Everything is ok");
             }else {
                 this.loginStatus.setText("Wrong username or password");
             }
-        }catch (Exception e) {
-            e.printStackTrace();
+        }catch (SQLException e) {
+            this.loginStatus.setText("SQL Exception found in the code");
         }
 
     }
@@ -68,38 +68,35 @@ public class LoginController implements Initializable {
     public void administratorLogin(){
         try {
             Stage adminStage = new Stage();
-//            FXMLLoader loader = new FXMLLoader();
-//            Pane root = (Pane)loader.load(getClass().getResource("/administrators/administratorFXML.fxml").openStream());
            Parent root = (Parent) FXMLLoader.load(getClass().getResource("admin.fxml"));
 
-        //    AdministratorContorller administratorContorller = (AdministratorContorller)loader.getController();
             Scene scene = new Scene(root);
             adminStage.setScene(scene);
             adminStage.setTitle("Administrator Dashboard");
             adminStage.setResizable(false);
             adminStage.show();
         }catch (IOException e){
-           e.printStackTrace();
+            System.out.println("Exception with load method");
+        }catch (NullPointerException e){
+            System.out.println("FXML file does not exist");
         }
     }
 
     public void representativeLogin(){
         try {
               Stage reprStage = new Stage();
-//            FXMLLoader loader = new FXMLLoader();
-//            Pane root = (Pane)loader.load(getClass().getResource("/representatives/representativeFXML.fxml").openStream());
-            System.out.println("here");
+
             Parent root = (Parent) FXMLLoader.load(getClass().getResource("representative.fxml"));
 
-//            RepresentativeController representativeController=(RepresentativeController)loader.getController();
             Scene scene = new Scene(root);
             reprStage.setScene(scene);
             reprStage.setTitle("Representative Dashboard");
             reprStage.setResizable(false);
             reprStage.show();
         }catch (IOException e){
-            System.out.println("Not found");
-            e.printStackTrace();
+            System.out.println("Exception with load method");
+        }catch (NullPointerException e){
+            this.loginStatus.setText("FXML file does not exist");
         }
     }
 }
